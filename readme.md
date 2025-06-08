@@ -9,6 +9,12 @@
 
   `python_embeded\python.exe -m pip install -r ComfyUI\custom_nodes\ComfyUI-WanVideoWrapper\requirements.txt`
 
+Install the required Python packages from `requirements.txt`. This file has been configured to use versions compatible with the project.
+
+```bash
+pip install -r requirements.txt --upgrade
+```
+
 ## Models
 
 https://huggingface.co/Kijai/WanVideo_comfy/tree/main
