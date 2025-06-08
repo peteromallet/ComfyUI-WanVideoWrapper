@@ -4,7 +4,7 @@ import sys
 # Add the comfy_src directory to Python's import path BEFORE other imports
 script_directory = os.path.dirname(os.path.abspath(__file__))
 comfy_src_path = os.path.join(script_directory, 'comfy_src')
-sys.path.insert(0, comfy_src_path)
+sys.path.append(comfy_src_path)
 
 import torch
 from PIL import Image
