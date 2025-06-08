@@ -114,7 +114,8 @@ class WanAttention(nn.Module):
 class WanModel(nn.Module):
     def __init__(self, dim, ffn_dim, eps, freq_dim, in_dim, model_type, out_dim, text_len, num_heads, num_layers, 
                  attention_mode, main_device, offload_device, teacache_coefficients, vace_layers=None, 
-                 vace_in_dim=None, inject_sample_info=False, add_ref_conv=False, in_dim_ref_conv=None, add_control_adapter=False):
+                 vace_in_dim=None, inject_sample_info=False, add_ref_conv=False, in_dim_ref_conv=None, add_control_adapter=False,
+                 patch_kernel_size=(1, 4, 4), patch_stride=(1, 4, 4)):
         super().__init__()
         self.dim = dim
         self.ffn_dim = ffn_dim
@@ -135,7 +136,7 @@ class WanModel(nn.Module):
         self.add_control_adapter = add_control_adapter
         self.dtype = torch.bfloat16 # for rope
 
-        self.patch_embedding = nn.Conv3d(in_dim, dim, kernel_size=(1, 4, 4), stride=(1, 4, 4))
+        self.patch_embedding = nn.Conv3d(in_dim, dim, kernel_size=patch_kernel_size, stride=patch_stride)
         self.rope_embedder = RopeEmbedder(dim=dim, num_heads=num_heads)
         self.blocks = nn.ModuleList([
             Block(dim=dim, num_heads=num_heads, ffn_dim=ffn_dim, text_len=text_len, eps=eps, attention_mode=attention_mode, main_device=main_device, offload_device=offload_device, dtype=self.dtype) for _ in range(num_layers)

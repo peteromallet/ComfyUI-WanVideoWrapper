@@ -558,6 +558,11 @@ class WanVideoModelLoader:
             sd = new_sd
         if not "patch_embedding.weight" in sd:
             raise ValueError("Invalid WanVideo model selected")
+
+        patch_embedding_weight_shape = sd["patch_embedding.weight"].shape
+        patch_kernel_size = patch_embedding_weight_shape[2:]
+        patch_stride = patch_kernel_size
+
         dim = sd["patch_embedding.weight"].shape[0]
         in_channels = sd["patch_embedding.weight"].shape[1]
         log.info(f"Detected model in_channels: {in_channels}")
@@ -640,6 +645,8 @@ class WanVideoModelLoader:
             "add_ref_conv": True if "ref_conv.weight" in sd else False,
             "in_dim_ref_conv": sd["ref_conv.weight"].shape[1] if "ref_conv.weight" in sd else None,
             "add_control_adapter": True if "control_adapter.conv.weight" in sd else False,
+            "patch_kernel_size": patch_kernel_size,
+            "patch_stride": patch_stride,
         }
 
         with init_empty_weights():
