@@ -1,5 +1,11 @@
 import os
 import sys
+
+# Add the comfy_src directory to Python's import path BEFORE other imports
+script_directory = os.path.dirname(os.path.abspath(__file__))
+comfy_src_path = os.path.join(script_directory, 'comfy_src')
+sys.path.insert(0, comfy_src_path)
+
 import torch
 from PIL import Image
 import numpy as np
@@ -7,11 +13,6 @@ import imageio
 import folder_paths # Import for model paths
 import urllib.request
 from tqdm import tqdm
-
-# Add the comfy_src directory to Python's import path
-script_directory = os.path.dirname(os.path.abspath(__file__))
-comfy_src_path = os.path.join(script_directory, 'comfy_src')
-sys.path.insert(0, comfy_src_path)
 
 # Import the node classes from nodes.py
 from nodes import (
