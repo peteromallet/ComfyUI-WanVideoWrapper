@@ -70,5 +70,77 @@ with 1.3B T2V model
 
 https://github.com/user-attachments/assets/4f35ba84-da7a-4d5b-97ee-9641296f391e
 
+# Standalone WanVideo Image-to-Video Runner
+
+This project provides a standalone Python script (`img2vid.py`) to run an image-to-video generation workflow using the ComfyUI WanVideoWrapper, without needing to run the full ComfyUI application.
+
+## Features
+
+- **Standalone Execution**: Runs a complex ComfyUI workflow from a single Python script.
+- **Self-Contained**: Clones the necessary ComfyUI source code into `comfy_src` and uses a local `models` directory.
+- **Automatic Model Downloader**: On the first run, the script automatically checks for and downloads all required models from Hugging Face, showing a progress bar.
+
+---
+
+## Setup and Installation
+
+Follow these steps to set up the project environment.
+
+### 1. Clone this Repository
+
+```bash
+git clone <your-repo-url>
+cd <your-repo-name>
+```
+
+### 2. Clone ComfyUI Source Code
+
+The script needs access to the core ComfyUI source files. Clone the official repository into a directory named `comfy_src` inside your project folder.
+
+```bash
+git clone https://github.com/comfyanonymous/ComfyUI.git comfy_src
+```
+
+### 3. Install Python Dependencies
+
+Install all the required Python packages using the provided `requirements.txt` file. It is recommended to do this in a virtual environment.
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## How to Run
+
+After completing the setup, you can generate a video.
+
+### 1. Place an Input Image
+
+Add a PNG or JPEG image that you want to animate into the `examples/` directory. If the directory doesn't exist, the script will create it for you.
+
+### 2. Execute the Script
+
+Run the `img2vid.py` script from your terminal.
+
+```bash
+python img2vid.py
+```
+
+**Note:** The first time you run the script, it will download several large model files (totaling over 25 GB). This will take a while depending on your internet connection. Subsequent runs will be much faster as they will use the locally saved models.
+
+### 3. Find Your Video
+
+The output video will be saved in the `output/` directory, named `my_video.mp4`.
+
+---
+
+## Customization
+
+You can easily customize the generation by editing the `if __name__ == '__main__':` block at the bottom of the `img2vid.py` script. Here you can change:
+- The input image path.
+- The positive and negative text prompts.
+- The output video path.
+
 
 

@@ -1,4 +1,11 @@
 import os
+import sys
+
+# Add the comfy_src directory to Python's import path
+script_directory = os.path.dirname(os.path.abspath(__file__))
+comfy_src_path = os.path.join(os.path.dirname(script_directory), 'comfy_src')
+sys.path.insert(0, comfy_src_path)
+
 import torch
 import torch.nn.functional as F
 import gc
