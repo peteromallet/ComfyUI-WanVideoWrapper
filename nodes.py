@@ -9,23 +9,23 @@ sys.path.insert(0, comfy_src_path)
 import torch
 import torch.nn.functional as F
 import gc
-from .utils import log, print_memory, apply_lora, clip_encode_image_tiled, fourier_filter
+from utils import log, print_memory, apply_lora, clip_encode_image_tiled, fourier_filter
 import numpy as np
 import math
 from tqdm import tqdm
 
-from .wanvideo.modules.clip import CLIPModel
-from .wanvideo.modules.model import WanModel, rope_params
-from .wanvideo.modules.t5 import T5EncoderModel
-from .wanvideo.utils.fm_solvers import (FlowDPMSolverMultistepScheduler,
+from wanvideo.modules.clip import CLIPModel
+from wanvideo.modules.model import WanModel, rope_params
+from wanvideo.modules.t5 import T5EncoderModel
+from wanvideo.utils.fm_solvers import (FlowDPMSolverMultistepScheduler,
                                get_sampling_sigmas, retrieve_timesteps)
-from .wanvideo.utils.fm_solvers_unipc import FlowUniPCMultistepScheduler
-from .wanvideo.utils.basic_flowmatch import FlowMatchScheduler
+from wanvideo.utils.fm_solvers_unipc import FlowUniPCMultistepScheduler
+from wanvideo.utils.basic_flowmatch import FlowMatchScheduler
 from diffusers.schedulers import FlowMatchEulerDiscreteScheduler, DEISMultistepScheduler
-from .wanvideo.utils.scheduling_flow_match_lcm import FlowMatchLCMScheduler
+from wanvideo.utils.scheduling_flow_match_lcm import FlowMatchLCMScheduler
 
-from .enhance_a_video.globals import enable_enhance, disable_enhance, set_enhance_weight, set_num_frames
-from .taehv import TAEHV
+from enhance_a_video.globals import enable_enhance, disable_enhance, set_enhance_weight, set_num_frames
+from taehv import TAEHV
 
 from accelerate import init_empty_weights
 from accelerate.utils import set_module_tensor_to_device
@@ -769,7 +769,7 @@ class WanVideoModelLoader:
         
         
         if "fast" in quantization:
-            from .fp8_optimization import convert_fp8_linear
+            from fp8_optimization import convert_fp8_linear
             if quantization == "fp8_e4m3fn_fast_no_ffn":
                 params_to_keep.update({"ffn"})
             print(params_to_keep)
@@ -778,8 +778,8 @@ class WanVideoModelLoader:
         del sd
 
         if vram_management_args is not None:
-            from .diffsynth.vram_management import enable_vram_management, AutoWrappedModule, AutoWrappedLinear
-            from .wanvideo.modules.model import WanLayerNorm, WanRMSNorm
+            from diffsynth.vram_management import enable_vram_management, AutoWrappedModule, AutoWrappedLinear
+            from wanvideo.modules.model import WanLayerNorm, WanRMSNorm
 
             total_params_in_model = sum(p.numel() for p in patcher.model.diffusion_model.parameters())
             log.info(f"Total number of parameters in the loaded model: {total_params_in_model}")
@@ -906,7 +906,7 @@ class WanVideoVAELoader:
     DESCRIPTION = "Loads Wan VAE model from 'ComfyUI/models/vae'"
 
     def loadmodel(self, model_name, precision):
-        from .wanvideo.wan_video_vae import WanVideoVAE
+        from wanvideo.wan_video_vae import WanVideoVAE
 
         device = mm.get_torch_device()
         offload_device = mm.unet_offload_device()
@@ -950,7 +950,7 @@ class WanVideoTinyVAELoader:
     DESCRIPTION = "Loads Wan VAE model from 'ComfyUI/models/vae'"
 
     def loadmodel(self, model_name, precision):
-        from .taehv import TAEHV
+        from taehv import TAEHV
 
         device = mm.get_torch_device()
         offload_device = mm.unet_offload_device()
@@ -2645,7 +2645,7 @@ class WanVideoSampler:
                     noise[:, place_idx:place_idx + delta, :, :] = noise[:, list_idx, :, :]
             
             log.info(f"Context schedule enabled: {context_frames} frames, {context_stride} stride, {context_overlap} overlap")
-            from .context import get_context_scheduler
+            from context import get_context_scheduler
             context = get_context_scheduler(context_schedule)
 
         if samples is not None:
@@ -2689,7 +2689,7 @@ class WanVideoSampler:
         if args.preview_method in [LatentPreviewMethod.Auto, LatentPreviewMethod.Latent2RGB]: #default for latent2rgb
             from latent_preview import prepare_callback
         else:
-            from .latent_preview import prepare_callback #custom for tiny VAE previews
+            from latent_preview import prepare_callback #custom for tiny VAE previews
         callback = prepare_callback(patcher, steps)
 
         #blockswap init        
